@@ -1,5 +1,6 @@
 package com.example.plaza_de_comidas.adapters.driven.jpa.msql.adapter;
 
+import com.example.plaza_de_comidas.adapters.driven.jpa.msql.bcrypt.EncryptServiceImp;
 import com.example.plaza_de_comidas.adapters.driven.jpa.msql.entity.UserEntity;
 import com.example.plaza_de_comidas.adapters.driven.jpa.msql.mapper.IUserEntityMapper;
 import com.example.plaza_de_comidas.adapters.driven.jpa.msql.repository.IUserRepositoryJPA;
@@ -14,10 +15,13 @@ public class UserAdapter implements IUserPersistencePort {
 
     private IUserRepositoryJPA userRepositoryJPA;
     private IUserEntityMapper userEntityMapper;
+    private EncryptServiceImp encryptServiceImp;
 
     @Override
     public User save(User user) {
         UserEntity userEntity = userEntityMapper.toUserEntity(user);
+        String password = userEntity.getPassword();
+        userEntity.setPassword(encryptServiceImp.encryptPassword(password));
         return userEntityMapper.toUser(userRepositoryJPA.save(userEntity));
     }
 }
