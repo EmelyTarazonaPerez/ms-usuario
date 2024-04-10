@@ -4,6 +4,7 @@ import com.example.plaza_de_comidas.adapters.driving.http.dto.AddUserRequest;
 import com.example.plaza_de_comidas.adapters.driving.http.mapper.IUserRequestMapper;
 import com.example.plaza_de_comidas.domain.api.IUserServicePort;
 import com.example.plaza_de_comidas.domain.model.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class UserRestController {
     private final IUserServicePort userServicePort;
     private final IUserRequestMapper userRequestMapper;
     @PostMapping("/create")
-    public ResponseEntity<User> save(@RequestBody AddUserRequest addUserRequest){
+    public ResponseEntity<User> save(@Valid @RequestBody AddUserRequest addUserRequest){
         User user = userRequestMapper.toUser(addUserRequest);
         return new ResponseEntity<>(userServicePort.createAdminAccount(user), HttpStatus.OK);
     }
