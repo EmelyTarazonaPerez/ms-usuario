@@ -5,4 +5,6 @@ import com.example.plaza_de_comidas.domain.model.User;
 
 public interface IUserPersistencePort {
     User save (User user);
+    User getRolUserById(int id);
+    User getUserByGmail(String gmail);
 }

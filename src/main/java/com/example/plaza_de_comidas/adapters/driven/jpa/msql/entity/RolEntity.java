@@ -14,6 +14,7 @@ import java.util.List;
 public class RolEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_rol")
     private int idRol;
     private String name;
     private String description;

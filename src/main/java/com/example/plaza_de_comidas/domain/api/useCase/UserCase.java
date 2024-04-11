@@ -21,4 +21,14 @@ public class UserCase implements IUserServicePort {
         }
         return userPersistencePort.save(user);
     }
+
+    @Override
+    public User getRolUserById(int id) {
+        return userPersistencePort.getRolUserById(id);
+    }
+
+    @Override
+    public User findByGmail(String gmail) {
+        return userPersistencePort.getUserByGmail(gmail);
+    }
 }

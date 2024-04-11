@@ -29,5 +29,4 @@ public class AddUserRequest {
     private String gmail;
     private String password;
     private Rol idRol;
-
 }
