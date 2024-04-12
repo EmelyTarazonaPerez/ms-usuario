@@ -9,4 +9,6 @@ public interface IUserServicePort {
      User getRolUserById(int id);
 
      User findByGmail(String gmail);
+
+    void createEmpleyeeAccount(User user);
 }

@@ -7,4 +7,5 @@ public interface IUserPersistencePort {
     User save (User user);
     User getRolUserById(int id);
     User getUserByGmail(String gmail);
+
 }

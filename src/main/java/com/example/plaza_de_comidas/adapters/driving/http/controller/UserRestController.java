@@ -4,6 +4,7 @@ import com.example.plaza_de_comidas.adapters.driving.http.JwtService.JwtService;
 import com.example.plaza_de_comidas.adapters.driving.http.dto.AddUserRequest;
 import com.example.plaza_de_comidas.adapters.driving.http.dto.AuthResponse;
 import com.example.plaza_de_comidas.adapters.driving.http.dto.LoginRequest;
+import com.example.plaza_de_comidas.adapters.driving.http.handler.InvalidAutorization;
 import com.example.plaza_de_comidas.adapters.driving.http.mapper.IUserRequestMapper;
 import com.example.plaza_de_comidas.domain.api.IUserServicePort;
 import com.example.plaza_de_comidas.domain.model.User;
@@ -26,8 +27,20 @@ public class UserRestController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    @PostMapping("/create/propietario")
-    public ResponseEntity<AuthResponse> registerPropietario (@Valid @RequestBody AddUserRequest addUserRequest){
+    @PostMapping("/create/employee")
+    public ResponseEntity<AuthResponse> employeeRecord (@Valid @RequestBody AddUserRequest addUserRequest){
+        try{
+            User user = userRequestMapper.toUser(addUserRequest);
+            userServicePort.createEmpleyeeAccount(user);
+            AuthResponse authResponse = AuthResponse.builder().auth(jwtService.getToken(user)).build();
+            return new ResponseEntity<>(authResponse, HttpStatus.OK);
+        }catch (Exception e){
+            throw new InvalidAutorization("No cuenta con los permisos para crear un empleado");
+        }
+    }
+
+    @PostMapping("/create/owner")
+    public ResponseEntity<AuthResponse> ownerRegistration (@Valid @RequestBody AddUserRequest addUserRequest){
         User user = userRequestMapper.toUser(addUserRequest);
         userServicePort.createAdminAccount(user);
         AuthResponse authResponse = AuthResponse.builder().auth(jwtService.getToken(user)).build();
