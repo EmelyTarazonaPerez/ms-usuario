@@ -31,13 +31,12 @@ public class UserRestController {
     public ResponseEntity<AuthResponse> employeeRecord (@Valid @RequestBody AddUserRequest addUserRequest){
         try{
             User user = userRequestMapper.toUser(addUserRequest);
-            userServicePort.createAdminAccount(user);
+            userServicePort.createEmpleyeeAccount(user);
             AuthResponse authResponse = AuthResponse.builder().auth(jwtService.getToken(user)).build();
             return new ResponseEntity<>(authResponse, HttpStatus.OK);
         }catch (Exception e){
             throw new InvalidAutorization("No cuenta con los permisos para crear un empleado");
         }
-
     }
 
     @PostMapping("/create/owner")

@@ -1,5 +1,6 @@
 package com.example.plaza_de_comidas.domain.api.useCase;
 
+import com.example.plaza_de_comidas.domain.exception.ExceptionInsertUser;
 import com.example.plaza_de_comidas.domain.model.Rol;
 import com.example.plaza_de_comidas.domain.model.User;
 import com.example.plaza_de_comidas.domain.spi.IUserPersistencePort;
@@ -15,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserCaseTest {
@@ -24,8 +25,22 @@ class UserCaseTest {
     IUserPersistencePort userPersistencePort;
     @InjectMocks
     UserCase userCase;
+
+    private  User userInput;
     @BeforeEach
     void setUp() {
+        userInput = new User(
+                1,
+                "test",
+                "test",
+                "1090506050",
+                "+573104922805",
+                LocalDate.of(1997,04,11),
+                "propietario@gmail.com",
+                new Rol(3, "test", "rol"),
+                "passwordEncryptada"
+
+        );
     }
 
     @Test
@@ -47,5 +62,49 @@ class UserCaseTest {
         final User result = userCase.createAdminAccount(propietario);
 
         Assertions.assertEquals(propietario, result);
+    }
+
+    @Test
+    void testCreateEmployeeAccount_ValidUser() {
+        // Arrange
+        userInput.setBirthDate(LocalDate.of(1990, 1, 1)); // Supongamos que el usuario tiene más de 18 años
+        userInput.setIdRol(new Rol(3, "test", "test")); // Supongamos que el ID de rol es 3
+
+        when(userPersistencePort.save(userInput)).thenReturn(userInput);
+        // Act
+        userCase.createEmpleyeeAccount(userInput);
+
+        // Assert
+        verify(userPersistencePort, times(1)).save(userInput);
+    }
+
+    @Test
+    void testCreateEmployeeAccount_UnderageUser() {
+        // Arrange
+        userInput.setBirthDate(LocalDate.now()); // Supongamos que el usuario tiene menos de 18 años
+        userInput.setIdRol(new Rol(3,"test", "test")); // Supongamos que el ID de rol es 3
+
+        Exception exception = assertThrows(ExceptionInsertUser.class, () -> {
+            userCase.createEmpleyeeAccount( userInput);
+        });
+
+        assertEquals("El propetario a crear debe ser mayor de edad", exception.getMessage());
+        verify(userPersistencePort, never()).save(any(User.class));
+    }
+
+    @Test
+    void testCreateEmployeeAccount_InvalidRoleId() {
+        // Arrange
+        userInput.setBirthDate(LocalDate.of(1990, 1, 1)); // Supongamos que el usuario tiene más de 18 años
+        userInput.setIdRol(new Rol(1, "test", "test")); // Supongamos que el ID de rol es diferente de 3
+
+
+        // Act & Assert
+        Exception exception = assertThrows(ExceptionInsertUser.class, () -> {
+            userCase.createEmpleyeeAccount(userInput);
+        });
+
+        assertEquals("Warning: Error idRol", exception.getMessage());
+        verify(userPersistencePort, never()).save(any(User.class));
     }
 }
