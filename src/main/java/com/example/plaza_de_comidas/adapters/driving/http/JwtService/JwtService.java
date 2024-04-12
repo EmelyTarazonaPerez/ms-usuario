@@ -31,6 +31,7 @@ public class JwtService {
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getGmail())
+                .claim("userId", user.getIdUser())
                 .claim("rol", user.getIdRol().getName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+1000*60*24))
@@ -89,8 +90,15 @@ public class JwtService {
 
     public String extractRole(String token) {
         Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
-
         return claims.getBody().get("rol", String.class);
+    }
+
+    public  int getUserIdFromToken(String token) {
+        Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+
+        // Obtener el ID de usuario del token
+        Integer userIdInt = claims.getBody().get("userId", Integer.class);
+        return userIdInt != null ? userIdInt : 0;
     }
 
 }

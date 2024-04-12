@@ -26,7 +26,8 @@ class UserCaseTest {
     @InjectMocks
     UserCase userCase;
 
-    private  User userInput;
+    private User userInput;
+
     @BeforeEach
     void setUp() {
         userInput = new User(
@@ -35,7 +36,7 @@ class UserCaseTest {
                 "test",
                 "1090506050",
                 "+573104922805",
-                LocalDate.of(1997,04,11),
+                LocalDate.of(1997, 04, 11),
                 "propietario@gmail.com",
                 new Rol(3, "test", "rol"),
                 "passwordEncryptada"
@@ -52,7 +53,7 @@ class UserCaseTest {
                 "propietario1",
                 "1090506050",
                 "+573104922805",
-                LocalDate.of(1997,04,11),
+                LocalDate.of(1997, 04, 11),
                 "propietario@gmail.com",
                 new Rol(2, "propietario", "rol"),
                 "passwordEncryptada"
@@ -72,7 +73,7 @@ class UserCaseTest {
 
         when(userPersistencePort.save(userInput)).thenReturn(userInput);
         // Act
-        userCase.createEmpleyeeAccount(userInput);
+        userCase.createEmployeeAccount(userInput);
 
         // Assert
         verify(userPersistencePort, times(1)).save(userInput);
@@ -82,10 +83,10 @@ class UserCaseTest {
     void testCreateEmployeeAccount_UnderageUser() {
         // Arrange
         userInput.setBirthDate(LocalDate.now()); // Supongamos que el usuario tiene menos de 18 años
-        userInput.setIdRol(new Rol(3,"test", "test")); // Supongamos que el ID de rol es 3
+        userInput.setIdRol(new Rol(3, "test", "test")); // Supongamos que el ID de rol es 3
 
         Exception exception = assertThrows(ExceptionInsertUser.class, () -> {
-            userCase.createEmpleyeeAccount( userInput);
+            userCase.createEmployeeAccount(userInput);
         });
 
         assertEquals("El propetario a crear debe ser mayor de edad", exception.getMessage());
@@ -101,10 +102,54 @@ class UserCaseTest {
 
         // Act & Assert
         Exception exception = assertThrows(ExceptionInsertUser.class, () -> {
-            userCase.createEmpleyeeAccount(userInput);
+            userCase.createEmployeeAccount(userInput);
         });
 
         assertEquals("Warning: Error idRol", exception.getMessage());
         verify(userPersistencePort, never()).save(any(User.class));
     }
+
+    @Test
+    void createCostumerAccount() {
+        User customer = new User(
+                1,
+                "customer",
+                "customer",
+                "1090506050",
+                "+573104922805",
+                LocalDate.of(1997, 04, 11),
+                "customer@gmail.com",
+                new Rol(4, "customer", "rol"),
+                "passwordEncryptada"
+
+        );
+        when(userPersistencePort.save(customer)).thenReturn(customer);
+        final User result = userCase.createCostumerAccount(customer);
+
+        Assertions.assertEquals(customer, result);
+    }
+
+    @Test
+    void createCostumerAccount_InvalidRoleId() {
+        User customer = new User(
+                1,
+                "customer",
+                "customer",
+                "1090506050",
+                "+573104922805",
+                LocalDate.of(1997, 04, 11),
+                "customer@gmail.com",
+                new Rol(2, "customer", "rol"),
+                "passwordEncryptada"
+
+        );
+        // Act & Assert
+        Exception exception = assertThrows(ExceptionInsertUser.class, () -> {
+            userCase.createEmployeeAccount(customer);
+        });
+
+        assertEquals("Warning: Error idRol", exception.getMessage());
+        verify(userPersistencePort, never()).save(any(User.class));
+    }
+
 }
