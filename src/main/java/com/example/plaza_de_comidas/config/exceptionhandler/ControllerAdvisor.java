@@ -1,5 +1,6 @@
 package com.example.plaza_de_comidas.config.exceptionhandler;
 
+import com.example.plaza_de_comidas.adapters.driving.http.handler.InvalidAutorization;
 import com.example.plaza_de_comidas.domain.exception.ExceptionEdadPerson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(new ExceptionResponse
                 (String.format( exception.getMessage()),
                         HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(InvalidAutorization.class)
+    public ResponseEntity<ExceptionResponse> handleErrorInvalidAutorization (InvalidAutorization exception){
+        return ResponseEntity.badRequest().body(new ExceptionResponse
+                (String.format( exception.getMessage()),
+                        HttpStatus.NOT_ACCEPTABLE.toString(), LocalDateTime.now()
                 ));
     }
     @Override
