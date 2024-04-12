@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EncryptServiceImp implements EncryptPassword{
+
     @Override
     public  String encryptPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
