@@ -183,7 +183,7 @@ class UserRestControllerTest {
                 new Rol(3, "empleado", "rol"));
 
         when(userRequestMapper.toUser(addUserRequest)).thenReturn(empleado);
-        when(userServicePort.createAdminAccount(empleado)).thenReturn(empleado);
+        doNothing().when(userServicePort).createEmployeeAccount(empleado);
         when(jwtService.getToken(empleado)).thenReturn("token_de_prueba");
 
         // Act
@@ -216,5 +216,27 @@ class UserRestControllerTest {
         });
         verify(userServicePort, never()).createAdminAccount(any(User.class));
         verify(jwtService, never()).getToken(any(User.class));
+    }
+
+    @Test
+    void customeRegistration() throws Exception {
+        empleado.setIdUser(4);
+        User customer = empleado;
+        AddUserRequest addUserRequest = new AddUserRequest("any",
+                "an", "11125", "541", LocalDate.now(), "djsad@gmail.com", "12345",
+                new Rol(4, "cliente", "cliente") );
+
+        // Configura el comportamiento del mock para userRequestMapper
+        when(userRequestMapper.toUser(any(AddUserRequest.class))).thenReturn(customer);
+
+        // Configura el comportamiento del mock para userServicePort
+        doReturn(customer).when(userServicePort).createCostumerAccount(customer);
+
+        // Act
+        ResponseEntity<User> response = userRestController.customeRegistration(addUserRequest);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
     }
 }

@@ -15,7 +15,7 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface IUserEntityMapper {
     @Mappings(value = {
-            @Mapping(target = "idUser", ignore = true),
+            @Mapping(source = "idUser",  target = "idUser"),
             @Mapping(source = "name", target = "name"),
             @Mapping(source = "lastName", target = "lastName"),
             @Mapping(source = "identificationDocument", target = "identificationDocument"),

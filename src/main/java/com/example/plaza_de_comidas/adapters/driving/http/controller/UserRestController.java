@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,19 +23,14 @@ import org.springframework.web.bind.annotation.*;
 public class UserRestController {
     private final IUserServicePort userServicePort;
     private final IUserRequestMapper userRequestMapper;
-    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
     @PostMapping("/create/employee")
     public ResponseEntity<AuthResponse> employeeRecord (@Valid @RequestBody AddUserRequest addUserRequest){
-        try{
-            User user = userRequestMapper.toUser(addUserRequest);
-            userServicePort.createEmpleyeeAccount(user);
-            AuthResponse authResponse = AuthResponse.builder().auth(jwtService.getToken(user)).build();
-            return new ResponseEntity<>(authResponse, HttpStatus.OK);
-        }catch (Exception e){
-            throw new InvalidAutorization("No cuenta con los permisos para crear un empleado");
-        }
+        User user = userRequestMapper.toUser(addUserRequest);
+        userServicePort.createEmployeeAccount(user);
+        AuthResponse authResponse = AuthResponse.builder().auth(jwtService.getToken(user)).build();
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
     @PostMapping("/create/owner")
@@ -47,15 +41,11 @@ public class UserRestController {
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login (@RequestBody LoginRequest loginRequest){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getGmail(), loginRequest.getPassword()));
-
-        User user = userServicePort.findByGmail(loginRequest.getGmail());
-        String token = jwtService.getToken(user);
-
-        AuthResponse authResponse = AuthResponse.builder().auth(token).build();
-        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    @PostMapping("/create/customer")
+    public ResponseEntity<User> customeRegistration (@Valid @RequestBody AddUserRequest addUserRequest){
+        User user = userRequestMapper.toUser(addUserRequest);
+        final User costumerAccount = userServicePort.createCostumerAccount(user);
+        return new ResponseEntity<>(costumerAccount, HttpStatus.OK);
     }
 
     @GetMapping("")

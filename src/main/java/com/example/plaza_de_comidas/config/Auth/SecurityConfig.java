@@ -33,10 +33,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/create/customer").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/create/owner").hasAuthority("admin")
                         .requestMatchers(HttpMethod.POST, "/auth/create/employee").hasAuthority("propietario")
                         .anyRequest().authenticated()
-
                 )
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
