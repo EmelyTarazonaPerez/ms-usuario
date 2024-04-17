@@ -1,9 +1,9 @@
 package com.example.plaza_de_comidas.adapters.driving.http.controller;
 
-import com.example.plaza_de_comidas.adapters.driving.http.JwtService.JwtService;
+import com.example.plaza_de_comidas.config.Auth.ConfigJwt.JwtService;
 import com.example.plaza_de_comidas.adapters.driving.http.dto.AuthResponse;
 import com.example.plaza_de_comidas.adapters.driving.http.dto.LoginRequest;
-import com.example.plaza_de_comidas.adapters.driving.http.mapper.IUserRequestMapper;
+import com.example.plaza_de_comidas.domain.api.IJwtServicePort;
 import com.example.plaza_de_comidas.domain.api.IUserServicePort;
 import com.example.plaza_de_comidas.domain.model.User;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginRestController {
     private final IUserServicePort userServicePort;
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
+    private final IJwtServicePort jwtService;
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login (@RequestBody LoginRequest loginRequest){
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getGmail(), loginRequest.getPassword()));

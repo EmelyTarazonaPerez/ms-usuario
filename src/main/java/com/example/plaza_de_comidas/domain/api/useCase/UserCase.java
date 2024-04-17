@@ -16,32 +16,22 @@ public class UserCase implements IUserServicePort {
     }
 
     @Override
-    public User createAdminAccount(User user) {
+    public User createOwnerAccount(User user) {
         int year = LocalDate.now().getYear() - user.getBirthDate().getYear();
         if (year <= 18) {
             throw new ExceptionInsertUser("El propetario a crear debe ser mayor de edad");
         }
-        if (user.getIdRol().getIdRol() != 1) {
+        if (user.getIdRol().getIdRol() != 2) {
             throw new ExceptionInsertUser("Warning: Error idRol");
         }
         return userPersistencePort.save(user);
     }
 
     @Override
-    public User getRolUserById(int id) {
-        return userPersistencePort.getRolUserById(id);
-    }
-
-    @Override
-    public User findByGmail(String gmail) {
-        return userPersistencePort.getUserByGmail(gmail);
-    }
-
-    @Override
     public void createEmployeeAccount(User user) {
         int year = LocalDate.now().getYear() - user.getBirthDate().getYear();
         if (year <= 18) {
-            throw new ExceptionInsertUser("El propetario a crear debe ser mayor de edad");
+            throw new ExceptionInsertUser("El empleado a crear debe ser mayor de edad");
         }
         if (user.getIdRol().getIdRol() != 3) {
            throw new ExceptionInsertUser("Warning: Error idRol");
@@ -55,5 +45,15 @@ public class UserCase implements IUserServicePort {
             throw new ExceptionInsertUser("Warning: Error idRol");
         }
         return userPersistencePort.save(user);
+    }
+
+    @Override
+    public User getRolUserById(int id) {
+        return userPersistencePort.getRolUserById(id);
+    }
+
+    @Override
+    public User findByGmail(String gmail) {
+        return userPersistencePort.getUserByGmail(gmail);
     }
 }

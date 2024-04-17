@@ -60,7 +60,7 @@ class UserCaseTest {
 
         );
         when(userPersistencePort.save(propietario)).thenReturn(propietario);
-        final User result = userCase.createAdminAccount(propietario);
+        final User result = userCase.createOwnerAccount(propietario);
 
         Assertions.assertEquals(propietario, result);
     }
@@ -89,7 +89,7 @@ class UserCaseTest {
             userCase.createEmployeeAccount(userInput);
         });
 
-        assertEquals("El propetario a crear debe ser mayor de edad", exception.getMessage());
+        assertEquals("El empleado a crear debe ser mayor de edad", exception.getMessage());
         verify(userPersistencePort, never()).save(any(User.class));
     }
 

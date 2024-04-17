@@ -1,11 +1,7 @@
 package com.example.plaza_de_comidas.domain.model;
-
-import lombok.Getter;
-
 import java.time.LocalDate;
 
 public class User {
-
     private int idUser;
     private String name;
     private String lastName;

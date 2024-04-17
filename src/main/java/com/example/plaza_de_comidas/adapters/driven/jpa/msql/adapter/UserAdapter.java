@@ -1,6 +1,5 @@
 package com.example.plaza_de_comidas.adapters.driven.jpa.msql.adapter;
 
-import com.example.plaza_de_comidas.adapters.driven.jpa.msql.bcrypt.EncryptServiceImp;
 import com.example.plaza_de_comidas.adapters.driven.jpa.msql.entity.UserEntity;
 import com.example.plaza_de_comidas.adapters.driven.jpa.msql.exception.ErrorUserBd;
 import com.example.plaza_de_comidas.adapters.driven.jpa.msql.mapper.IUserEntityMapper;
@@ -8,11 +7,13 @@ import com.example.plaza_de_comidas.adapters.driven.jpa.msql.repository.IUserRep
 import com.example.plaza_de_comidas.domain.model.User;
 import com.example.plaza_de_comidas.domain.spi.IUserPersistencePort;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static com.example.plaza_de_comidas.adapters.driven.jpa.msql.utils.ContantsUtil.USER_NOT_FOUND;
+import static com.example.plaza_de_comidas.adapters.driven.jpa.msql.utils.ContantsUtil.USER_NOT_REGISTER;
 
 @Service
 @AllArgsConstructor
@@ -20,20 +21,26 @@ public class UserAdapter implements IUserPersistencePort {
 
     private IUserRepositoryJPA userRepositoryJPA;
     private IUserEntityMapper userEntityMapper;
-    private EncryptServiceImp encryptServiceImp;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User save(User user) {
         UserEntity userEntity = userEntityMapper.toUserEntity(user);
         String password = userEntity.getPassword();
-        userEntity.setPassword(encryptServiceImp.encryptPassword(password));
+        userEntity.setPassword(passwordEncoder.encode(password));
         return userEntityMapper.toUser(userRepositoryJPA.save(userEntity));
     }
 
     @Override
     public User getRolUserById(int id) {
-        List<UserEntity> userList = userRepositoryJPA.findAll();
-        return userEntityMapper.toUser(userList.stream().filter(user -> user.getIdUser() == id).toList().get(0));
+        try {
+            Optional<UserEntity> userList = userRepositoryJPA.findByIdUser(id);
+            if (userList.isEmpty()) throw new ErrorUserBd(USER_NOT_FOUND);
+            return userEntityMapper.toUser(userList.get());
+
+        } catch (Exception e) {
+            throw new ErrorUserBd(USER_NOT_REGISTER);
+        }
     }
 
     @Override
@@ -42,7 +49,7 @@ public class UserAdapter implements IUserPersistencePort {
             Optional<UserEntity> user = userRepositoryJPA.findByGmail(gmail);
             return userEntityMapper.toUser(user.get());
         } catch (Exception e) {
-            throw new ErrorUserBd("Usuario no registrado");
+            throw new ErrorUserBd(USER_NOT_FOUND);
         }
     }
 }
