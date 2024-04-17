@@ -1,5 +1,6 @@
 package com.example.plaza_de_comidas.config.exceptionhandler;
 
+import com.example.plaza_de_comidas.adapters.driven.jpa.msql.exception.ErrorUserBd;
 import com.example.plaza_de_comidas.adapters.driving.http.handler.InvalidAutorization;
 import com.example.plaza_de_comidas.domain.exception.ExceptionInsertUser;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(ErrorUserBd.class)
+    public ResponseEntity<ExceptionResponse> handleErrorUserBd(ErrorUserBd exception){
+        return ResponseEntity.badRequest().body(new ExceptionResponse
+                (String.format( exception.getMessage()),
+                        HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()
+                ));
+    }
+
     @ExceptionHandler(ExceptionInsertUser.class)
-    public ResponseEntity<ExceptionResponse> handleErrorListTechnologies (ExceptionInsertUser exception){
+    public ResponseEntity<ExceptionResponse> handleErrorInsertUser (ExceptionInsertUser exception){
         return ResponseEntity.badRequest().body(new ExceptionResponse
                 (String.format( exception.getMessage()),
                         HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()

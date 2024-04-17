@@ -1,4 +1,4 @@
-package com.example.plaza_de_comidas.adapters.driving.http.JwtService;
+package com.example.plaza_de_comidas.config.Auth.ConfigJwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

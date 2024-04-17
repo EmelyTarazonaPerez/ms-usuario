@@ -22,6 +22,7 @@ public class AddUserRequest {
     private String lastName;
     @Pattern(regexp = "^[0-9]+$", message = "Solo se permiten números")
     private String identificationDocument;
+    @Pattern(regexp = "^[0-9]+$", message = "Solo se permiten números")
     @Size(max=13, message="telefono debe tener maximo 13 caracteres")
     private String phone;
     private LocalDate birthDate;

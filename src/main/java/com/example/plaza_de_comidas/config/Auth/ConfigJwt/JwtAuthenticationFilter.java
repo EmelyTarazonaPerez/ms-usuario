@@ -1,4 +1,4 @@
-package com.example.plaza_de_comidas.adapters.driving.http.JwtService;
+package com.example.plaza_de_comidas.config.Auth.ConfigJwt;
 import java.io.IOException;
 
 import org.springframework.http.HttpHeaders;
