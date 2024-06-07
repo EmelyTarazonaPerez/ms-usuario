@@ -1,9 +1,9 @@
-package com.example.plaza_de_comidas.config.Auth;
+package com.example.plaza_de_comidas.adapters.driven.security.config;
 
 
-import com.example.plaza_de_comidas.config.Auth.ConfigJwt.JwtAuthenticationFilter;
-import com.example.plaza_de_comidas.config.Auth.ConfigJwt.JwtService;
-import com.example.plaza_de_comidas.config.Auth.ConfigJwt.JwtTokenValidationFilter;
+import com.example.plaza_de_comidas.domain.spi.IJwtPort;
+import com.example.plaza_de_comidas.adapters.driven.security.jwt.filters.JwtAuthenticationFilter;
+import com.example.plaza_de_comidas.adapters.driven.security.adapter.JwtAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final JwtService tokenValidator;
+    private final JwtAdapter tokenValidator;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtTokenValidationFilter(tokenValidator), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new IJwtPort.JwtTokenValidationFilter(tokenValidator), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

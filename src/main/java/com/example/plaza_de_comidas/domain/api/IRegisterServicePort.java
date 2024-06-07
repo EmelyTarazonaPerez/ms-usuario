@@ -3,7 +3,7 @@ package com.example.plaza_de_comidas.domain.api;
 
 import com.example.plaza_de_comidas.domain.model.User;
 
-public interface IUserServicePort {
+public interface IRegisterServicePort {
     User createOwnerAccount(User user);
     User getRolUserById(int id);
     User findByGmail(String gmail);

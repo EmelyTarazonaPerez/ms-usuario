@@ -1,10 +1,10 @@
 package com.example.plaza_de_comidas.adapters.driving.http.controller;
 
-import com.example.plaza_de_comidas.config.Auth.ConfigJwt.JwtService;
+import com.example.plaza_de_comidas.adapters.driven.security.adapter.JwtAdapter;
 import com.example.plaza_de_comidas.adapters.driving.http.dto.*;
 import com.example.plaza_de_comidas.adapters.driving.http.mapper.IUserRequestMapper;
 import com.example.plaza_de_comidas.adapters.driving.http.mapper.IUserResponseMapper;
-import com.example.plaza_de_comidas.domain.api.IUserServicePort;
+import com.example.plaza_de_comidas.domain.api.IRegisterServicePort;
 import com.example.plaza_de_comidas.domain.model.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class RegisterRestController {
-    private final IUserServicePort userServicePort;
+    private final IRegisterServicePort userServicePort;
     private final IUserRequestMapper userRequestMapper;
     private final IUserResponseMapper userResponseMapper;
 
-    private final JwtService jwtService;
+    private final JwtAdapter jwtAdapter;
 
     @PostMapping("/create/employee")
     public ResponseEntity<AuthResponse> employeeRecord (@Valid @RequestBody AddUserRequest addUserRequest){
         User user = userRequestMapper.toUser(addUserRequest);
         userServicePort.createEmployeeAccount(user);
-        AuthResponse authResponse = AuthResponse.builder().auth(jwtService.getToken(user)).build();
+        AuthResponse authResponse = AuthResponse.builder().auth(jwtAdapter.getToken(user)).build();
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
@@ -35,7 +35,7 @@ public class RegisterRestController {
     public ResponseEntity<AuthResponse> ownerRegistration (@Valid @RequestBody AddUserRequest addUserRequest){
         User user = userRequestMapper.toUser(addUserRequest);
         userServicePort.createOwnerAccount(user);
-        AuthResponse authResponse = AuthResponse.builder().auth(jwtService.getToken(user)).build();
+        AuthResponse authResponse = AuthResponse.builder().auth(jwtAdapter.getToken(user)).build();
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 

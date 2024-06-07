@@ -1,6 +1,6 @@
-package com.example.plaza_de_comidas.config.Auth.ConfigJwt;
+package com.example.plaza_de_comidas.adapters.driven.security.adapter;
 
-import com.example.plaza_de_comidas.domain.api.IJwtServicePort;
+import com.example.plaza_de_comidas.domain.spi.IJwtPort;
 import com.example.plaza_de_comidas.domain.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtService implements IJwtServicePort {
+public class JwtAdapter implements IJwtPort {
 
     private static final String SECRET_KEY="586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
 

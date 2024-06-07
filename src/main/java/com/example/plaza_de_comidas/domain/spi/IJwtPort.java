@@ -1,4 +1,4 @@
-package com.example.plaza_de_comidas.domain.api;
+package com.example.plaza_de_comidas.domain.spi;
 
 import com.example.plaza_de_comidas.adapters.driven.security.adapter.JwtAdapter;
 import com.example.plaza_de_comidas.domain.model.User;
@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.function.Function;
 
-public interface IJwtServicePort {
+public interface IJwtPort {
+
     public String getToken(User user);
 
     public String getUsernameFromToken(String token);

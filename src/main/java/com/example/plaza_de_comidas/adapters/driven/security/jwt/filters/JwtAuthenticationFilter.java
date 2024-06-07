@@ -1,6 +1,7 @@
-package com.example.plaza_de_comidas.config.Auth.ConfigJwt;
+package com.example.plaza_de_comidas.adapters.driven.security.jwt.filters;
 import java.io.IOException;
 
+import com.example.plaza_de_comidas.adapters.driven.security.adapter.JwtAdapter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final JwtAdapter jwtAdapter;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -37,13 +38,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        username=jwtService.getUsernameFromToken(token);
+        username= jwtAdapter.getUsernameFromToken(token);
 
         if (username!=null && SecurityContextHolder.getContext().getAuthentication()==null)
         {
             UserDetails userDetails=userDetailsService.loadUserByUsername(username);
 
-            if (jwtService.isTokenValid(token, userDetails))
+            if (jwtAdapter.isTokenValid(token, userDetails))
             {
                 UsernamePasswordAuthenticationToken authToken= new UsernamePasswordAuthenticationToken(
                         userDetails,

@@ -24,7 +24,7 @@ class UserCaseTest {
     @Mock
     IUserPersistencePort userPersistencePort;
     @InjectMocks
-    UserCase userCase;
+    RegisterService userCase;
 
     private User userInput;
 

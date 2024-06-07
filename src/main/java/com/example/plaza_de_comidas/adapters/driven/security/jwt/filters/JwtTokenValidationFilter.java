@@ -1,5 +1,6 @@
-package com.example.plaza_de_comidas.config.Auth.ConfigJwt;
+package com.example.plaza_de_comidas.adapters.driven.security.jwt.filters;
 
+import com.example.plaza_de_comidas.adapters.driven.security.adapter.JwtAdapter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,10 +18,10 @@ import java.io.IOException;
 import java.util.Collections;
 
 @Service
-public class JwtTokenValidationFilter extends OncePerRequestFilter {
-    private final JwtService tokenValidator;
+class JwtTokenValidationFilter extends OncePerRequestFilter {
+    private final JwtAdapter tokenValidator;
 
-    public JwtTokenValidationFilter(JwtService tokenValidator) {
+    public JwtTokenValidationFilter(JwtAdapter tokenValidator) {
         this.tokenValidator = tokenValidator;
     }
 

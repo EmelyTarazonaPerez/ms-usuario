@@ -1,10 +1,10 @@
 package com.example.plaza_de_comidas.adapters.driving.http.controller;
 
-import com.example.plaza_de_comidas.config.Auth.ConfigJwt.JwtService;
+import com.example.plaza_de_comidas.adapters.driven.security.adapter.JwtAdapter;
 import com.example.plaza_de_comidas.adapters.driving.http.dto.AddUserRequest;
 import com.example.plaza_de_comidas.adapters.driving.http.dto.AuthResponse;
 import com.example.plaza_de_comidas.adapters.driving.http.mapper.IUserRequestMapper;
-import com.example.plaza_de_comidas.domain.api.IUserServicePort;
+import com.example.plaza_de_comidas.domain.api.IRegisterServicePort;
 import com.example.plaza_de_comidas.domain.model.Rol;
 import com.example.plaza_de_comidas.domain.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,11 +31,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class RegisterRestControllerTest {
 
     @Mock
-    IUserServicePort userServicePort;
+    IRegisterServicePort userServicePort;
     @Mock
     IUserRequestMapper userRequestMapper;
     @Mock
-    private JwtService jwtService;
+    private JwtAdapter jwtAdapter;
 
     @InjectMocks
     RegisterRestController userRestController;
@@ -82,14 +82,14 @@ class RegisterRestControllerTest {
         when(userRequestMapper.toUser(addUserRequest)).thenReturn(propietario);
 
         String token = "mockToken";
-        when(jwtService.getToken(propietario)).thenReturn(token);
+        when(jwtAdapter.getToken(propietario)).thenReturn(token);
 
         // Act
         ResponseEntity<AuthResponse> response = userRestController.ownerRegistration(addUserRequest);
 
         // Assert
         verify(userServicePort).createOwnerAccount(propietario);
-        verify(jwtService).getToken(propietario);
+        verify(jwtAdapter).getToken(propietario);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(token, response.getBody().getAuth());
     }
@@ -111,14 +111,14 @@ class RegisterRestControllerTest {
         when(userRequestMapper.toUser(addUserRequest)).thenReturn(empleado);
 
         String token = "mockToken";
-        when(jwtService.getToken(empleado)).thenReturn(token);
+        when(jwtAdapter.getToken(empleado)).thenReturn(token);
 
         // Act
         ResponseEntity<AuthResponse> response = userRestController.ownerRegistration(addUserRequest);
 
         // Assert
         verify(userServicePort).createOwnerAccount(empleado);
-        verify(jwtService).getToken(empleado);
+        verify(jwtAdapter).getToken(empleado);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(token, response.getBody().getAuth());
     }
