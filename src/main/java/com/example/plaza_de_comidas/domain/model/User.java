@@ -1,11 +1,11 @@
 package com.example.plaza_de_comidas.domain.model;
 import java.time.LocalDate;
 
-public class User {
-    private int idUser;
-    private String name;
-    private String lastName;
-    private String identificationDocument;
+public class User { //ENTIDAD
+    private int idUser; //VALUE OBJECT
+    private String name; //VALUE OBJECT
+    private String lastName; //VALUE OBJECT
+    private String identificationDocument; //VALUE OBJECT
     private String phone;
     private LocalDate birthDate;
     private String gmail;

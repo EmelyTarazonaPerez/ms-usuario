@@ -1,18 +1,21 @@
 package com.example.plaza_de_comidas.domain.api.useCase;
 
 
-import com.example.plaza_de_comidas.domain.api.IUserServicePort;
+import com.example.plaza_de_comidas.domain.api.IRegisterServicePort;
 import com.example.plaza_de_comidas.domain.exception.ExceptionInsertUser;
 import com.example.plaza_de_comidas.domain.model.User;
+import com.example.plaza_de_comidas.domain.spi.IPasswordEncodePort;
 import com.example.plaza_de_comidas.domain.spi.IUserPersistencePort;
 
 import java.time.LocalDate;
 
-public class UserCase implements IUserServicePort {
+public class RegisterService implements IRegisterServicePort {
     private final IUserPersistencePort userPersistencePort;
+    private final IPasswordEncodePort passwordEncodePort;
 
-    public UserCase(IUserPersistencePort userPersistencePort) {
+    public RegisterService(IUserPersistencePort userPersistencePort, IPasswordEncodePort passwordEncodePort) {
         this.userPersistencePort = userPersistencePort;
+        this.passwordEncodePort = passwordEncodePort;
     }
 
     @Override
@@ -24,6 +27,7 @@ public class UserCase implements IUserServicePort {
         if (user.getIdRol().getIdRol() != 2) {
             throw new ExceptionInsertUser("Warning: Error idRol");
         }
+        passwordEncodePort.encodeToPasswordEncoder(user.getPassword());
         return userPersistencePort.save(user);
     }
 
@@ -36,6 +40,7 @@ public class UserCase implements IUserServicePort {
         if (user.getIdRol().getIdRol() != 3) {
            throw new ExceptionInsertUser("Warning: Error idRol");
         }
+        passwordEncodePort.encodeToPasswordEncoder(user.getPassword());
         userPersistencePort.save(user);
     }
 
@@ -44,6 +49,7 @@ public class UserCase implements IUserServicePort {
         if (user.getIdRol().getIdRol() != 4) {
             throw new ExceptionInsertUser("Warning: Error idRol");
         }
+        passwordEncodePort.encodeToPasswordEncoder(user.getPassword());
         return userPersistencePort.save(user);
     }
 

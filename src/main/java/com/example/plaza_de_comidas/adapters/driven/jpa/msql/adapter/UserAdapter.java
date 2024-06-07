@@ -21,13 +21,10 @@ public class UserAdapter implements IUserPersistencePort {
 
     private IUserRepositoryJPA userRepositoryJPA;
     private IUserEntityMapper userEntityMapper;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User save(User user) {
         UserEntity userEntity = userEntityMapper.toUserEntity(user);
-        String password = userEntity.getPassword();
-        userEntity.setPassword(passwordEncoder.encode(password));
         return userEntityMapper.toUser(userRepositoryJPA.save(userEntity));
     }
 

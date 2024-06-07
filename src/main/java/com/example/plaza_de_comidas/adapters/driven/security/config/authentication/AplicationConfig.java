@@ -1,4 +1,4 @@
-package com.example.plaza_de_comidas.config.Auth;
+package com.example.plaza_de_comidas.adapters.driven.security.config.authentication;
 
 import com.example.plaza_de_comidas.adapters.driven.jpa.msql.repository.IUserRepositoryJPA;
 import lombok.RequiredArgsConstructor;
